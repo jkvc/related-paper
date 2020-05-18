@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex main"] 1589764102 "main.aux" "main.bbl" "main" 1589764126
+["bibtex main"] 1589765775 "main.aux" "main.bbl" "main" 1589766005
   "/usr/local/texlive/2019/texmf-dist/bibtex/bst/base/unsrt.bst" 1292289607 18030 1376b4b231b50c66211e47e42eda2875 ""
-  "main.aux" 1589764126 736 be93ae8b39c037d188ff31c2e2d8d47d "pdflatex"
+  "main.aux" 1589766005 1052 a85436bb699330728853b4a9183dbff4 "pdflatex"
   "reference.bib" 1589762726 0 d41d8cd98f00b204e9800998ecf8427e ""
   (generated)
-  "main.bbl"
   "main.blg"
-["pdflatex"] 1589764126 "/Users/junshenchen/related-paper/paper/lit-review/main.tex" "/Users/junshenchen/related-paper/paper/lit-review/main.pdf" "main" 1589764126
-  "/Users/junshenchen/related-paper/paper/lit-review/main.aux" 1589764126 736 be93ae8b39c037d188ff31c2e2d8d47d ""
-  "/Users/junshenchen/related-paper/paper/lit-review/main.tex" 1589764125 1263 90cb7ea569ee4691f4babd0667c3a399 ""
+  "main.bbl"
+["pdflatex"] 1589766004 "/Users/junshenchen/related-paper/paper/lit-review/main.tex" "/Users/junshenchen/related-paper/paper/lit-review/main.pdf" "main" 1589766005
+  "/Users/junshenchen/related-paper/paper/lit-review/main.aux" 1589766005 1052 a85436bb699330728853b4a9183dbff4 ""
+  "/Users/junshenchen/related-paper/paper/lit-review/main.tex" 1589766004 2865 d79b1711f40031165bcadd56370cc20f ""
   "/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1511824771 3332 103109f5612ad95229751940c61aada0 ""
@@ -86,14 +86,14 @@
   "/usr/local/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt" 1557342086 4259635 562fc36ec496993777a6c428d8bfb811 ""
   "/usr/local/texlive/2019/texmf.cnf" 1557341546 577 d150fef99ac436ad1156e86b0892f6ef ""
   "arxiv.sty" 1589787884 7515 e66acaa25633dcb2a29d3e897868c365 ""
-  "main.aux" 1589764126 736 be93ae8b39c037d188ff31c2e2d8d47d "pdflatex"
-  "main.bbl" 1589764102 49 0eba253fc001332e731e8aba3f23127b "bibtex main"
-  "main.out" 1589764126 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "main.tex" 1589764125 1263 90cb7ea569ee4691f4babd0667c3a399 ""
+  "main.aux" 1589766005 1052 a85436bb699330728853b4a9183dbff4 "pdflatex"
+  "main.bbl" 1589765775 49 0eba253fc001332e731e8aba3f23127b "bibtex main"
+  "main.out" 1589766005 67 bc8efdf4a1d4946d14850d4f9ec3c677 "pdflatex"
+  "main.tex" 1589766004 2865 d79b1711f40031165bcadd56370cc20f ""
   (generated)
-  "/Users/junshenchen/related-paper/paper/lit-review/main.pdf"
-  "/Users/junshenchen/related-paper/paper/lit-review/main.log"
   "main.aux"
-  "main.log"
   "main.out"
+  "/Users/junshenchen/related-paper/paper/lit-review/main.pdf"
+  "main.log"
   "main.pdf"
+  "/Users/junshenchen/related-paper/paper/lit-review/main.log"

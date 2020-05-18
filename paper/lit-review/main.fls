@@ -101,10 +101,10 @@ INPUT /Users/junshenchen/related-paper/paper/lit-review/main.out
 INPUT /Users/junshenchen/related-paper/paper/lit-review/main.out
 INPUT /Users/junshenchen/related-paper/paper/lit-review/main.out
 INPUT /Users/junshenchen/related-paper/paper/lit-review/main.out
+OUTPUT /Users/junshenchen/related-paper/paper/lit-review/main.pdf
 INPUT /Users/junshenchen/related-paper/paper/lit-review/main.out
 INPUT /Users/junshenchen/related-paper/paper/lit-review/main.out
 OUTPUT /Users/junshenchen/related-paper/paper/lit-review/main.out
-OUTPUT /Users/junshenchen/related-paper/paper/lit-review/main.pdf
 INPUT /usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT /usr/local/texlive/2019/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
