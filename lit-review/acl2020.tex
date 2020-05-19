@@ -1,0 +1,146 @@
+%
+% File acl2020.tex
+%
+%% Based on the style files for ACL 2020, which were
+%% Based on the style files for ACL 2018, NAACL 2018/19, which were
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{acl2020}
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{times}
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage[ruled,vlined]{algorithm2e}
+
+
+\renewcommand{\UrlFont}{\ttfamily\small}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+\aclfinalcopy % Uncomment this line for the final submission
+%\def\aclpaperid{***} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+\newcommand\BibTeX{B\textsc{ib}\TeX}
+
+\title{
+  Finding Related ArXiv Papers with BERT \\
+  \vspace{0.5em}
+  \small{CS224U Project - Literature Review}
+}
+
+\author{
+  Junshen Kevin Chen \\
+  Stanford University \\ 
+  \texttt{jkc1@stanford.edu} \\
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+
+% \begin{abstract}
+% This document contains the instructions for preparing a manuscript for the proceedings of ACL 2020.
+% The document itself conforms to its own specifications, and is therefore an example of what your manuscript should look like.
+% These instructions should be used for both papers submitted for review and for final versions of accepted papers.
+% Authors are asked to conform to all the directions reported in this document.
+% \end{abstract}
+
+\section{Introduction}
+
+For this project, I propose to design a system that evaluates the level of relation between two academic papers, and suggest possible related work given a text query.
+
+\paragraph{Motivation} 
+Three main factors contribute to motivating this project. 
+First, the current state of academic research tools such as Google Scholar functioning similar to a traditional search engine, which primarily leverages keyword matching and ranking by popularity (citation counts), while having being limitedly influenced by content semantics. 
+Second, large data dumps of academic papers such as arXiv is available to extract relationships between academic work in the form of a citation graph.
+Finally, the research in transfomer models such as BERT \cite{devlin2018bert} provides powerful ways to encode semantics, and trained models are readily available to be fine-tuned for this specific task. 
+
+\paragraph{Problem}
+Tentatively, I formulate this project into several following problems, with each latter depending on the former:
+
+\begin{enumerate}
+    \item Given a query abstract, and a target abstract, predict a score of related-ness of query abstract to the target abstract
+    \item Given a query abstract, and a target abstract, predict a citation distance, or how many edges it needs to traverse from the query to the target
+    \item Given a query abstract, retrieve related articles (Stretch goal involving recommender system)
+\end{enumerate}
+
+In this document, I select and discuss the literature related to this project, in hopes that the outcome of this project produces some results in performing exactly this selection task. \footnote{To satisfy the guideline of the literature review assignment, I separate these readings into 5 topics.}
+
+
+\section{Select Literature Summaries}
+
+\subsection{ArXiv Papers and Citation Graph}
+
+This work by \cite{clement2019use} explores using academic papers on ArXiv as a research dataset. They build a publicly available script that extracts metadata and text from ArXiv's data dump, and a pipeline to extract a citation graph from processing the data. The raw data dump amounts to ~1.4TB of pdf files.
+
+The resultant processed dataset is 1.35 million articles at the time of publication, totalling ~11 billion words. Further, the citation graph contains ~6.7 million edges, and only 62\% weakly connected components, making this dataset significantly larger and denser than other popular dataset that provides a citation graph. This study aims to enable further research in text segmentation, link prediction, and research trend prediction.
+
+\subsection{Document Similarity with Topics}
+
+The work by \cite{gong2019document} attempts the problem of concept-project mapping without any deep model, producing a pipeline that maps a full-text document to a target summary document. The authors proposes a model that preprocesses both the document and the summary to generate a topic mapping, which in turn evaluates into relevance. 
+
+The authors propose a method of mapping topics into documents by projecting the vectors onto a linear space, then taking the intersection of the spaces. They experiment with topics generated by word2vec on science topics extracted from a corpus of science and discusses the result.
+
+\subsection{BERTs}
+
+Bidirectional Transformers for Language Understanding (BERT) is a powerful model developed by researchers at Google \cite{devlin2018bert}. Originally developed to tackle popular NLP tasks such as GLUE and SQuAD, the model proved to be applicable to many other NLP tasks as well. RoBERTa \cite{liu2019roberta} is a robustly-optimized version of BERT.2
+
+The model is computationally expensive to train, however, there are many publicly-available trained BERT models ready to be fine-tuned for specific tasks. Huggingface \cite{wolf2019huggingfaces} provides an easy access to trained small and large BERT models. This blog post by \cite{kurita_2019} discusses ways to pool or use BERT's [CLS] token for encoding variable length text.
+
+One possible limitation is that BERT is constrained to 512 tokens, and there exist papers with a longer abstract.
+
+\subsection{SBERT}
+
+In the work by \cite{reimers2019sentencebert}, the aurthors propose Sentence-BERT (SBERT), a BERT-based model fine-tuned for semantic text similarity tasks, outperfoming Google's Universal Sentence Encoder \cite{cer2018universal}. 
+
+SBERT is a BERT model trained with a Siamese structure. For the variaous tasks the aurthors tackled, the authors propose three training methods: softmax classifier on the concatenated BERT output vectors, regression on the cosine similarity on the BERT output vectors, and sentence embedding trained with triplet loss.
+
+Finally, the authors experiments with RoBERTa in comparison to BERT, and also experiment with both [CLS] token and averaging BERT embedding vectors across the token dimension.
+
+\subsection{Document Retrieval with BERT}
+
+In the paper titled Simple Applications of BERT for Ad Hoc Document Retrieval \cite{yang2019simple}, researchers experiments with a simple document retrieval task of searching for related social media posts and news articles. The system is given a short query text, to produce a ranking of documents within a corpus. 
+
+The authors approaches the problem in the most obvious manner, by fine-tuning BERT to a simple sentence inference task similar to BERT's original next-sentence prediction, with [SEP] token. This project shows promising result in improving search relevance, with certain limitation in data and possibly inefficiency.
+
+\section{Compare and Contrast}
+
+Aside from the first paper on using ArXiv as a dataset, all other work tackle sub-problems of text similarity / relation. In \cite{gong2019document}, the attempt is to use existing topic embeddings learned from an external corpus, and these topic are pre-defiend by human. BERT lays the ground work for the deep models. In \cite{yang2019simple}, the attempt is to use BERT in the most straightforward way by forwarding both the query and the candidate text, separated by the [SEP] token. Finally, in SBERT \cite{reimers2019sentencebert}, the authors are primarily concerned with the real-time performance of the deep model when given a query to search through candidates, and proposes a solution by vector similarity trained on a Siamese BERT. The results of each paper are not comparable as they do address different sub-problems and evaluates on different tasks and data. 
+
+\section{Future Work}
+
+\cite{clement2019use} provides a pipeline for the text dataset and a citation graph, this lays down the ground work in acquiring the dataset for my project. For this dataset, I propose to use the edge in the citation graph as a proxy to "academic related-ness", and build a model around it. In the aforementioned deep models, the problem of "text / topic similarity" is approached as a problem of supervised learning, therefore as a first step, this project will explore how to use the citation graph to generate a good label for training. 
+
+\cite{yang2019simple} uses BERT in the most straightforward way, and I propose to extend \cite{reimers2019sentencebert}'s work by further experimenting with various classifiers, while applying the models to the ArXiv dataset, to measure the related-ness between academic papers or abstracts, or the mixture of the two. I hypothesize that the measure of "similarity" as used by SBERT such as one optimized by triplet loss, is not as good in suggesting papers-to-cite, as intuitively cited works are somewhat related to the literature, but not strictly similar.
+
+Finally, as a stretch goal. I will use the result of the above to build a simple recommender system, to retrieve related articles in the database given a text query. I hypothesize that there will be some performance issues, and plan to explore how to resolve them.
+
+
+\clearpage
+\bibliographystyle{acl_natbib}
+\bibliography{acl2020}
+
+\end{document}
