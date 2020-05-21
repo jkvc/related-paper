@@ -1,4 +1,4 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{11}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 
 \bibitem[{Cer et~al.(2018)Cer, Yang, yi~Kong, Hua, Limtiaco, John, Constant,
@@ -40,10 +40,22 @@ Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar Joshi, Danqi Chen, Omer
 \newblock \href {http://arxiv.org/abs/1907.11692} {Roberta: A robustly
   optimized bert pretraining approach}.
 
+\bibitem[{Nayak(2019)}]{nayak_2019}
+Pandu Nayak. 2019.
+\newblock \href
+  {https://blog.google/products/search/search-language-understanding-bert/}
+  {Understanding searches better than ever before}.
+
 \bibitem[{Reimers and Gurevych(2019)}]{reimers2019sentencebert}
 Nils Reimers and Iryna Gurevych. 2019.
 \newblock \href {http://arxiv.org/abs/1908.10084} {Sentence-bert: Sentence
   embeddings using siamese bert-networks}.
+
+\bibitem[{Sanh et~al.(2019)Sanh, Debut, Chaumond, and
+  Wolf}]{sanh2019distilbert}
+Victor Sanh, Lysandre Debut, Julien Chaumond, and Thomas Wolf. 2019.
+\newblock \href {http://arxiv.org/abs/1910.01108} {Distilbert, a distilled
+  version of bert: smaller, faster, cheaper and lighter}.
 
 \bibitem[{Wolf et~al.(2019)Wolf, Debut, Sanh, Chaumond, Delangue, Moi, Cistac,
   Rault, Louf, Funtowicz, and Brew}]{wolf2019huggingfaces}

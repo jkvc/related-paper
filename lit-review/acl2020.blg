@@ -8,44 +8,44 @@ Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: acl2020.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 9 entries,
+You've used 11 entries,
             3571 wiz_defined-function locations,
-            731 strings with 7287 characters,
-and the built_in function-call counts, 6459 in all, are:
-= -- 470
-> -- 511
-< -- 2
-+ -- 165
-- -- 156
-* -- 510
-:= -- 1092
-add.period$ -- 27
-call.type$ -- 9
-change.case$ -- 97
-chr.to.int$ -- 9
-cite$ -- 9
-duplicate$ -- 370
-empty$ -- 351
-format.name$ -- 183
-if$ -- 1329
+            741 strings with 7606 characters,
+and the built_in function-call counts, 7496 in all, are:
+= -- 558
+> -- 564
+< -- 3
++ -- 182
+- -- 171
+* -- 576
+:= -- 1269
+add.period$ -- 33
+call.type$ -- 11
+change.case$ -- 112
+chr.to.int$ -- 11
+cite$ -- 11
+duplicate$ -- 431
+empty$ -- 423
+format.name$ -- 202
+if$ -- 1555
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 79
-newline$ -- 40
-num.names$ -- 36
-pop$ -- 200
+missing$ -- 90
+newline$ -- 48
+num.names$ -- 44
+pop$ -- 229
 preamble$ -- 1
-purify$ -- 88
+purify$ -- 101
 quote$ -- 0
-skip$ -- 239
+skip$ -- 293
 stack$ -- 0
-substring$ -- 99
-swap$ -- 184
+substring$ -- 121
+swap$ -- 210
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 81
+type$ -- 99
 warning$ -- 0
-while$ -- 27
+while$ -- 33
 width$ -- 0
-write$ -- 93
+write$ -- 113
