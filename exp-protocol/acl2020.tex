@@ -1,0 +1,157 @@
+%
+% File acl2020.tex
+%
+%% Based on the style files for ACL 2020, which were
+%% Based on the style files for ACL 2018, NAACL 2018/19, which were
+%% Based on the style files for ACL-2015, with some improvements
+%%  taken from the NAACL-2016 style
+%% Based on the style files for ACL-2014, which were, in turn,
+%% based on ACL-2013, ACL-2012, ACL-2011, ACL-2010, ACL-IJCNLP-2009,
+%% EACL-2009, IJCNLP-2008...
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt,a4paper]{article}
+\usepackage[hyperref]{acl2020}
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{times}
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage[ruled,vlined]{algorithm2e}
+
+
+\renewcommand{\UrlFont}{\ttfamily\small}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+\aclfinalcopy % Uncomment this line for the final submission
+%\def\aclpaperid{***} %  Enter the acl Paper ID here
+
+%\setlength\titlebox{5cm}
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+\newcommand\BibTeX{B\textsc{ib}\TeX}
+
+\title{
+  Finding Related ArXiv Papers with BERT \\
+  \vspace{0.5em}
+  \small{CS224U Project - Experiment Protocol}
+}
+
+\author{
+  Junshen Kevin Chen \\
+  Stanford University \\ 
+  \texttt{jkc1@stanford.edu} \\
+}
+
+
+\begin{document}
+\maketitle
+
+
+% \begin{abstract}
+
+% I propose a system that evaluates the relevancy between academic papers using text encodings from BERT, using a dataset of ArXiv papers, and the citation graph extracted from it. This document contains the findings of my preliminary literature search, and some discussion among them.
+
+% \end{abstract}
+
+\section{Introduction}
+
+In this project, I propose to design a system that evaluates the level of relation between two academic papers (classification), and suggest possible related work given a text abstract as query (retrieval) using semantic information, in hopes that it would augment the current keyword-matching-based academic search engines such as Google Scholar.
+
+I propose to use a pre-trained BERT [todo](and possibly other pre-trained deep transfomer models if time permits) for this task, fine-tuning and building a model that encodes the text of each paper in the corpus into a vector representation. Then, given an unseen query, use the same model to encode the query text, and retrieve document(s) related to the query based on vector distances. 
+
+\section{Hypothesis}
+
+I hypothesize that a pre-trained BERT model can be fine-tuned to encode "paper relation" using a corpus of ArXiv paper abstracts, and this model is able to retrieve related articles in the corpus to some accuracy. I further hypothesize the resulting system would have a run time complexity in the seconds, such that it has practical uses in augmenting existing keyword-matching-based academic search engines. 
+
+\section{Data}
+
+\subsection{Paper abstracts and citation graph}
+
+I use Semantic Scholar's Open Research Corpus (s2-corpus) [todo] as my main source of data. This corpus encompasses numerous popular sources of academic research, including ArXiv, IEEE, NeurIPS, etc. It also contains paper from various regions and in various languages. There are a totoal of [todo] items in this corpus.
+
+Each entry in this data set is an academic paper uniquely identified by an ID, and includes metadata information such as the title, fields of study, authors, year of publication, source conference, etc. 
+
+The s2-corpus includes the citation graph in the form of the ID's of in-citations and out-citations for each paper. From my investigation, this citation graph is significantly more complete in comparison to the ArXiv citation graph produced by [todo].
+
+I use the paper abstract text from this corpus, which is the main input of the BERT-based model. 
+
+\subsection{Paper full text}
+
+Because Semantic Scholar is a search engine that only points to contents in other hosts and conferences, the s2-corpus provides no full-text of papers. To augment the models with full texts, I use the ArXiv dataset by [todo].
+
+\subsection{Preprocessing }
+
+Before using the aforementioned two corpora, I first run them through a data  pipeline to perform the following preprocessing steps:
+
+\begin{enumerate}
+  \itemsep 0em
+  \item Filtering out articles not in English (based on abstract and title), since BERT is pre-trained in English.
+  \item Filtering out articles not in ArXiv, since we do not have the full text otherwise.
+  \item Optionally keeping only articles in Computer Science. I will train a smaller model with CS articles only for a proof-of-concept, then use the full ArXiv corpus to train a bigger model.
+  \item Removing in-citation or out-citation pointers of articles that are not kept after the previous steps
+  \item Tokenizing and encoding each abstract text with pre-trained BERT tokenizer, prepending the \texttt{[CLS]} token, then trimming to the max BERT length of 512
+\end{enumerate}
+
+\subsection{Train-dev-test split}
+
+After the aforementioned filtering steps, the resultant CS-only articles corpus has [todo] entries. I randomly split this corpus to train, dev, test sets in the proportion of $90:5:5$.
+
+\subsection{Sampling}
+
+For the specific model I propose, I need training and testing samples in the form of triplets: 
+
+$(anchor, positive\_sample, negative\_sample)$
+
+Where a positive sample is an article that either cites or is cited by the anchor, and a negative sample is an article neither cites nor cited by the anchor.
+
+I employ algorithm \ref{alg:sample} to sample the triplets:
+
+\begin{algorithm}
+  \SetAlgoLined
+  \caption{Sample Triplets}
+  \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output} 
+  \Input{$S$, set of articles}
+  \Output{$D$, set of article triplets}
+  
+  $D \gets \{\}$ \\
+  \For{$a \in S$}{
+      \For{$p \in Citations(a)$}{
+        \Repeat{$ n \notin Citations(a)$}{
+          $n \gets RandomChoice(S)$
+        }
+        $D \gets D \cup (a, p, n)$
+      }
+  }
+  \label{alg:sample}
+\end{algorithm}
+
+The algorithm is performed on each of train, dev, test set.
+
+\section{Metrics}
+
+\section{Models and General Reasoning}
+
+As the problem is defined such that the distances between BERT-encoded vector representation of related articles are small, and that of unrelated articles are large, I propose to use 
+
+\section{Summary of Progress}
+
+
+
+\clearpage
+% \bibliographystyle{acl_natbib}
+% \bibliography{acl2020}
+
+\end{document}
