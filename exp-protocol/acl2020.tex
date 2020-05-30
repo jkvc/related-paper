@@ -70,7 +70,7 @@
 
 In this project, I propose to design a system that evaluates the level of relation between two academic papers (classification), and suggest possible related work given a text abstract as query (retrieval) using semantic information, in hopes that it would augment the current keyword-matching-based academic search engines such as Google Scholar.
 
-I propose to use a pre-trained BERT [todo](and possibly other pre-trained deep transfomer models if time permits) for this task, fine-tuning and building a model that encodes the text of each paper in the corpus into a vector representation. Then, given an unseen query, use the same model to encode the query text, and retrieve document(s) related to the query based on vector distances. 
+I propose to use a pre-trained BERT \cite{devlin2018bert} (and possibly other pre-trained deep transfomer models if time permits) for this task, fine-tuning and building a model that encodes the text of each paper in the corpus into a vector representation. Then, given an unseen query, use the same model to encode the query text, and retrieve document(s) related to the query based on vector distances. 
 
 \section{Hypothesis}
 
@@ -80,17 +80,17 @@ I hypothesize that a pre-trained BERT model can be fine-tuned to encode "paper r
 
 \subsection{Paper abstracts and citation graph}
 
-I use Semantic Scholar's Open Research Corpus (s2-corpus) [todo] as my main source of data. This corpus encompasses numerous popular sources of academic research, including ArXiv, IEEE, NeurIPS, etc. It also contains paper from various regions and in various languages. There are a totoal of [todo] items in this corpus.
+I use Semantic Scholar's Open Research Corpus (s2-corpus) \cite{ammar:18} as my main source of data. This corpus encompasses numerous popular sources of academic research, including ArXiv, IEEE, NeurIPS, etc. It also contains paper from various regions and in various languages. There are a totoal of ~184,000,000 items in this corpus.
 
 Each entry in this data set is an academic paper uniquely identified by an ID, and includes metadata information such as the title, fields of study, authors, year of publication, source conference, etc. 
 
-The s2-corpus includes the citation graph in the form of the ID's of in-citations and out-citations for each paper. From my investigation, this citation graph is significantly more complete in comparison to the ArXiv citation graph produced by [todo].
+The s2-corpus includes the citation graph in the form of the ID's of in-citations and out-citations for each paper. From my investigation, this citation graph is significantly more complete in comparison to the ArXiv citation graph produced by \cite{clement2019use}.
 
 I use the paper abstract text from this corpus, which is the main input of the BERT-based model. 
 
 \subsection{Paper full text}
 
-Because Semantic Scholar is a search engine that only points to contents in other hosts and conferences, the s2-corpus provides no full-text of papers. To augment the models with full texts, I use the ArXiv dataset by [todo].
+Because Semantic Scholar is a search engine that only points to contents in other hosts and conferences, the s2-corpus provides no full-text of papers. To augment the models with full texts, I use the ArXiv dataset by \cite{clement2019use}.
 
 \subsection{Preprocessing }
 
@@ -107,11 +107,11 @@ Before using the aforementioned two corpora, I first run them through a data  pi
 
 \subsection{Train-dev-test split}
 
-After the aforementioned filtering steps, the resultant CS-only articles corpus has [todo] entries. I randomly split this corpus to train, dev, test sets in the proportion of $90:5:5$.
+After the aforementioned filtering steps, the resultant CS-only, English, ArXiv articles corpus has 157,227 entries. I randomly split this corpus to train, dev, test sets in the proportion of $90:5:5$.
 
 \subsection{Sampling}
 
-For the specific model I propose, I need training and testing samples in the form of triplets: 
+For the specific models I propose (see section \ref{section:model}), we need training and testing samples in the form of triplets: 
 
 $(anchor, positive\_sample, negative\_sample)$
 
@@ -123,11 +123,12 @@ I employ algorithm \ref{alg:sample} to sample the triplets:
   \SetAlgoLined
   \caption{Sample Triplets}
   \SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output} 
-  \Input{$S$, set of articles}
+  \Input{$S$, set of all articles}
+  \Input{$A$, set of all articles in the split}
   \Output{$D$, set of article triplets}
   
   $D \gets \{\}$ \\
-  \For{$a \in S$}{
+  \For{$a \in A$}{
       \For{$p \in Citations(a)$}{
         \Repeat{$ n \notin Citations(a)$}{
           $n \gets RandomChoice(S)$
@@ -142,16 +143,145 @@ The algorithm is performed on each of train, dev, test set.
 
 \section{Metrics}
 
-\section{Models and General Reasoning}
+\paragraph{Accuracy}
 
-As the problem is defined such that the distances between BERT-encoded vector representation of related articles are small, and that of unrelated articles are large, I propose to use 
+We will not use the classical definition of accuracy in a binary classification task as a metric, because the notion of accuracy is not relevant in this task for two reasons:
+
+\begin{enumerate}
+  \itemsep 0em
+  \item The dataset is sampled not according to real proportions of related / unrelated articles. Since we are sampling at equal proportion, therefore the constructed dev / test set does not reflect the real distribution. Setting a threshold on classifying related / unrelated when given two articles is irrelevant.
+  \item Suggesting related articles is a document retrieval task. Therefore we care less about the notion of whether two articles are related in the absolute sense, but care more about whether one article is more related to the anchor than another. 
+\end{enumerate}
+
+However, we can tweak this notion slightly to fit the "document comparison task". Given an anchor sample, a positive candidate and a negative candidata, a trained predictor would output which candidate relates to the anchor more than the other, such that predicting the positive candidate to be more related becomes a correct prediction, and incorrect otherwise. Then, accuracy is defined as:
+
+\[
+  Accuracy = 
+  \frac{
+    \sum_{(a, p, n) \in D} 
+    \mathbf{1} [rel(a, p) > rel(a,n)]
+  }{
+    \sum_{(a, p, n) \in D} 
+    1
+  }
+\]
+
+\paragraph{Mean vector distance difference}
+
+One meaningful metric to compare for different models is vector distance. Since the goal of the model is the reduce vector distance for positive (related) samples, and increase vector distance for negative (unrelated) samples, then the difference between the two across the set is meaningful. We define mean vector distance difference (MVDD) as:
+
+\[
+  MVDD = 
+  \sum_{\vec a \in \vec A} 
+  (
+    \frac{\sum_{\vec n} dist(\vec a, \vec n)}{\sum_{\vec n} 1}
+    -
+    \frac{\sum_{\vec p} dist(\vec a, \vec p)}{\sum_{\vec p} 1}
+  )
+\]
+
+Where $\vec a$ is an encoded vector representation of an article in the split, $\vec n$ is an encoded vector representation of an unrelated article to $a$, $\vec p$ is an encoded vector representation of a related article to $a$. The higher this number the better the model performs.
+
+Where $dist(\vec u, \vec v)$ is a vector distance function we use for the ranking problem. See section \ref{section:model}. 
+
+\paragraph{Precision, Recall, F-score @ k}
+
+Since document retrieval is a recommender system task, we will use precision, recall, and f-score @ k as an evaluation metric. It is defined such that given a recommendation budget $k$, which is set arbitrarily depending on the application, we retrieve top-$k$ documents related to the anchor $a$, as a set $P$ (predicted positive documents). Then, we may define the following:
+
+\[
+  Precision@k = 
+  \frac{
+    \sum_{\hat{p}\in P} \mathbf{1}[\hat p \in Citations(a)] 
+  }{
+    \sum_{\hat{p}\in P} 1
+  }
+\]
+\[
+  Recall@k = 
+  \frac{
+    \sum_{\hat{p}\in P} \mathbf{1}[\hat p \in Citations(a)] 
+  }{
+    \sum_{p \in Citations(a)} 1
+  }
+\]
+
+We may experiment with different $k$ for meaningful results. Then, we use the classical definition of f-score:
+
+\[
+  F_\beta @k = 
+  (1 + \beta ^2)
+  \frac{Precision@k \cdot Recall@k}{\beta^2 Precision@k + Recall@k}
+\]
+
+Where $\beta$ is a constant defining "how many times recall is as important as precision". 
+
+
+\section{Models and General Reasoning}
+\label{section:model}
+
+\subsection{Baseline Random Predictor}
+
+To understand the performance of any trained BERT models, we need to first define some baseline models against which to compare, to get a frame of reference in the metrics. 
+
+Intuitively, we can use a random predictor for each of our two tasks, to generate a frame of reference against which to compare the trained model.
+
+For the "document comparison task", given an anchor and two candidates, the random predictor would return either candidate randomly.
+
+For the "document retrieval task", given an anchor candidate, and a recommendation budget $k$, the random predictor would randomly sample $k$ documents from the set of all articles $S$.
+
+\subsection{InferSent}
+
+InferSent \cite{conneau2017supervised} is a semantic sentence encoder developed by researchers at Facebook AI Research. It is pre-trained with GloVe and fastText word embeddings, and encodes sentences of variable length to a fixed sized encoded vector. It is able to achieve high performance in various NLP and NLI tasks. 
+
+Intuitively, InferSent encodes sentences such that sentences with similar semantic meanings encodes to vectors with low distance and vice versa. However, article relevance is not strightly higher when they are semantically similar.
+
+I will attempt to use the vanilla InferSent model, and also fine-tune it with triplet loss, an use various vector distance functions to compare their performance. See section \ref{section:vecdist}.
+
+\subsection{BERT}
+
+Finally, I will fine-tune a pre-trained BERT-small model to perform a similar text encoding task, such that the encoded vector of related articles are low in distance and vice versa. 
+
+Intuitively, BERT (and any transformer model, for that matter), attends to all positions in the input tokens and therefore is able to deeply extract semantic information among texts. However, BERT is not by-default trained for this specific task of "document relevance" and therefore needs fine-tuning. 
+
+Since BERT outputs embedding vector for each token in the input, I will experiment with the following methods for comparing between articles:
+
+\begin{enumerate}
+  \itemsep 0em
+  \item Fine-tuning the model and taking the embedding of BERT's \texttt{[CLS]} token.
+  \item Average-pooling across the word dimension.
+  \item Max-pooling across the word dimension.
+\end{enumerate}
+
+\subsection{Vector Distances}
+\label{section:vecdist}
+
+For each of the above models (less the baseline), I will experiment with the following vector distance functions to compare their performance:
+
+\subsubsection*{Euclidean distance squared}
+\[
+  EuclSq( u,  v) = \sum_i ({u}_i - {v}_i) ^2
+\]
+\subsubsection*{Cosine distance}
+\[
+  CosDist( u,  v) = \frac{
+    {u} ^T {v}
+  }{
+    |{u}||{v}|
+  }
+\]
+\subsubsection*{Dot product}
+\[Dot(u, v) = u^Tv\]
+
+The lower the distance, the more similar the articles represented by $u$ and $v$.
+
 
 \section{Summary of Progress}
 
+At the time of writing this document, I have acquired and pre-processed both data sets, and performed all pre-processing with the aforementioned methods. I have also built a dummy classfier to use both as a superclass for classifiers as well as the random predictor baseline. 
 
 
 \clearpage
-% \bibliographystyle{acl_natbib}
-% \bibliography{acl2020}
+\bibliographystyle{acl_natbib}
+\bibliography{acl2020}
 
 \end{document}

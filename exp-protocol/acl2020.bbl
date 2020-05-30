@@ -1,0 +1,38 @@
+\begin{thebibliography}{4}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{Ammar et~al.(2018)Ammar, Groeneveld, Bhagavatula, Beltagy, Crawford,
+  Downey, Dunkelberger, Elgohary, Feldman, Ha, Kinney, Kohlmeier, Lo, Murray,
+  Ooi, Peters, Power, Skjonsberg, Wang, Wilhelm, Yuan, van Zuylen, and
+  Etzioni}]{ammar:18}
+Waleed Ammar, Dirk Groeneveld, Chandra Bhagavatula, Iz~Beltagy, Miles Crawford,
+  Doug Downey, Jason Dunkelberger, Ahmed Elgohary, Sergey Feldman, Vu~Ha,
+  Rodney Kinney, Sebastian Kohlmeier, Kyle Lo, Tyler Murray, Hsu-Han Ooi,
+  Matthew Peters, Joanna Power, Sam Skjonsberg, Lucy~Lu Wang, Chris Wilhelm,
+  Zheng Yuan, Madeleine van Zuylen, and Oren Etzioni. 2018.
+\newblock \href
+  {https://www.semanticscholar.org/paper/09e3cf5704bcb16e6657f6ceed70e93373a54618}
+  {Construction of the literature graph in semantic scholar}.
+\newblock In \emph{NAACL}.
+
+\bibitem[{Clement et~al.(2019)Clement, Bierbaum, O'Keeffe, and
+  Alemi}]{clement2019use}
+Colin~B. Clement, Matthew Bierbaum, Kevin~P. O'Keeffe, and Alexander~A. Alemi.
+  2019.
+\newblock \href {http://arxiv.org/abs/1905.00075} {On the use of arxiv as a
+  dataset}.
+
+\bibitem[{Conneau et~al.(2017)Conneau, Kiela, Schwenk, Barrault, and
+  Bordes}]{conneau2017supervised}
+Alexis Conneau, Douwe Kiela, Holger Schwenk, Loic Barrault, and Antoine Bordes.
+  2017.
+\newblock \href {http://arxiv.org/abs/1705.02364} {Supervised learning of
+  universal sentence representations from natural language inference data}.
+
+\bibitem[{Devlin et~al.(2018)Devlin, Chang, Lee, and
+  Toutanova}]{devlin2018bert}
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2018.
+\newblock \href {http://arxiv.org/abs/1810.04805} {Bert: Pre-training of deep
+  bidirectional transformers for language understanding}.
+
+\end{thebibliography}
