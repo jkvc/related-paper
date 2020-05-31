@@ -28,7 +28,7 @@ def get_dataloaders(batch_size):
             ),
             batch_size=batch_size,
             num_workers=1,
-            shuffle=True
+            shuffle=(split == 'train')  # only shuffle trian set
         )
         for split in ['train', 'dev', 'test']
     )

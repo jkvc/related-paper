@@ -17,7 +17,7 @@ class Bert_CLS_model(torch.nn.Module):
         self.bert_module = bert_module
 
     def forward(self, x):
-        hidden, _ = self.bert_module(x)  # (B,L,E)
+        hidden, = self.bert_module(x)  # (B,L,E)
         cls_embedding = hidden[:, 0, :]
         return cls_embedding
 
@@ -48,17 +48,17 @@ if __name__ == "__main__":
     #                2239,  1012]
     # bert_tokens = torch.tensor([bert_tokens]).to(DEVICE)
     # print(bert_tokens)
-    # bert_module = transformers.BertModel.from_pretrained(
-    #     'bert-base-uncased').to(DEVICE)
+    # bert_module = transformers.DistilBertModel.from_pretrained(
+    #     'distilbert-base-uncased').to(DEVICE)
     # model = Bert_CLS_model(bert_module)
     # print(model)
 
-    # bert_hidden, _ = bert_module(bert_tokens)
+    # bert_hidden, = bert_module(bert_tokens)
     # print(bert_tokens.shape)
     # print(bert_hidden.shape)
-    # print(y)
+    # print(bert_hidden)
 
-    bert_module = transformers.BertModel.from_pretrained(
-        'bert-base-uncased').to(DEVICE)
+    bert_module = transformers.DistilBertModel.from_pretrained(
+        'distilbert-base-uncased').to(DEVICE)
     model = Bert_CLS_model(bert_module)
     train_utils.init_model_save(model, sys.argv[1])

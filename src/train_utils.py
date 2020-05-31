@@ -75,7 +75,8 @@ def train_and_save(
 
         if dev_epoch_fn is not None:
             model.eval()
-            dev_result = dev_epoch_fn(e)
+            with torch.no_grad():
+                dev_result = dev_epoch_fn(e)
             merge_results(results, dev_result)
             save_results(results, results_path)
             new_dev_loss = dev_result['dev_loss']

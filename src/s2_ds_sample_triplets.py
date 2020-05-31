@@ -5,12 +5,12 @@ import random
 from tqdm import tqdm
 
 random.seed(420)
-TRAINPROP, DEVPROP, TESTPROP = 0.9, 0.05, 0.05
+TRAINPROP, DEVPROP, TESTPROP = 0.95, 0.025, 0.025
 
 
 def get_samples(src_ids, all_ids, citation_graph):
     samples = []
-    for src_id in src_ids:
+    for src_id in tqdm(src_ids):
         pos_ids = citation_graph[src_id]
         for pos_id in pos_ids:
             neg_id = get_negative_sample(all_ids, pos_ids)
