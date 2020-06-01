@@ -34,13 +34,14 @@ if __name__ == "__main__":
     with open(BERT_ENCODING_PATH, 'rb') as f:
         bert_encoding_dict = pickle.load(f)
 
+    pooler_inputs = {}
     for i, id in enumerate(tqdm(bert_encoding_dict)):
         with torch.no_grad():
             bert_encoding = bert_encoding_dict[id]
             bert_hidden, = bert(torch.tensor([bert_encoding]).to(DEVICE))
             pooler_input = stack_pooler_input(bert_hidden).squeeze(0)
-        print(pooler_input)
+            pooler_inputs[id] = pooler_input.cpu()
 
-        # if (i+1) % SAVE_EVERY == 0:
-        #     with open(POOLER_INPUT_PATH, 'wb') as f:
-        #         bert_encoding_dict = pickle.dump(f)
+        if (i+1) % SAVE_EVERY == 0:
+            with open(POOLER_INPUT_PATH, 'wb') as f:
+                bert_encoding_dict = pickle.dump(pooler_inputs, f)
