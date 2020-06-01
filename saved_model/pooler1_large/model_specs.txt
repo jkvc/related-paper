@@ -1,0 +1,8 @@
+Pooler(
+  (fc_module): Sequential(
+    (0): Linear(in_features=2304, out_features=1536, bias=True)
+    (1): LeakyReLU(negative_slope=0.01)
+    (2): Linear(in_features=1536, out_features=768, bias=True)
+    (3): Tanh()
+  )
+)
