@@ -40,8 +40,8 @@ if __name__ == "__main__":
             bert_encoding = bert_encoding_dict[id]
             bert_hidden, = bert(torch.tensor([bert_encoding]).to(DEVICE))
             pooler_input = stack_pooler_input(bert_hidden).squeeze(0)
-            pooler_inputs[id] = pooler_input.cpu()
+            pooler_inputs[id] = pooler_input.cpu().numpy()
 
         if (i+1) % SAVE_EVERY == 0:
             with open(POOLER_INPUT_PATH, 'wb') as f:
-                bert_encoding_dict = pickle.dump(pooler_inputs, f)
+                pickle.dump(pooler_inputs, f)
