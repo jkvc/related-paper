@@ -3,15 +3,17 @@ from tqdm import tqdm
 import transformers
 import sys
 
+# bert_tokenizer = transformers.DistilBertTokenizerFast.from_pretrained(
+#         'distilbert-base-uncased')
+bert_tokenizer = transformers.BertTokenizerFast.from_pretrained(
+    'bert-base-uncased')
+
 if __name__ == "__main__":
     srcpath = sys.argv[1]
     dstpath = sys.argv[2]
 
     with open(srcpath, 'rb') as f:
         data = pickle.load(f)
-
-    bert_tokenizer = transformers.DistilBertTokenizerFast.from_pretrained(
-        'distilbert-base-uncased')
 
     bert_data = {}
     for id in tqdm(data):

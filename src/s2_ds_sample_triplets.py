@@ -5,7 +5,10 @@ import random
 from tqdm import tqdm
 
 random.seed(420)
-TRAINPROP, DEVPROP, TESTPROP = 0.95, 0.025, 0.025
+TRAINPROP, DEVPROP, TESTPROP = 0.9, 0.05, 0.05
+
+CITATION_GRAPH_PATH = '../data/s2_corpus_citation.pkl'
+TRIPLET_PATH = '../data/s2_triplets.pkl'
 
 
 def get_samples(src_ids, all_ids, citation_graph):
@@ -26,10 +29,8 @@ def get_negative_sample(all_ids, pos_ids):
 
 
 if __name__ == "__main__":
-    srcpath = sys.argv[1]
-    dstpath = sys.argv[2]
 
-    with open(srcpath, 'rb') as f:
+    with open(CITATION_GRAPH_PATH, 'rb') as f:
         citation_data = pickle.load(f)
 
     ids = list(citation_data.keys())
@@ -56,7 +57,7 @@ if __name__ == "__main__":
         len(train_samples), len(dev_samples), len(test_samples)
     )
 
-    with open(dstpath, 'wb') as f:
+    with open(TRIPLET_PATH, 'wb') as f:
         pickle.dump({
             'train': train_samples,
             'dev': dev_samples,
