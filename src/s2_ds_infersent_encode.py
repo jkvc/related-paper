@@ -3,6 +3,8 @@ import torch
 import pickle
 import sys
 from tqdm import tqdm, trange
+import nltk
+nltk.download('punkt')
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
