@@ -47,10 +47,16 @@ if __name__ == "__main__":
 
     embeddings = infersent.encode(sentences, tokenize=True, bsize=64)
 
+    split_len = len(ids) // 2
     infersent_encoded = {
         ids[idx]: embeddings[idx]
-        for idx in trange(len(ids), desc='build_dict')
+        for idx in trange(len(ids[:split_len]), desc='build_dict')
     }
-
-    with open(infersent_encoding_save_path, 'wb') as f:
+    with open(infersent_encoding_save_path+'.1', 'wb') as f:
+        pickle.dump(infersent_encoded, f)
+    infersent_encoded = {
+        ids[idx]: embeddings[idx]
+        for idx in trange(len(ids[split_len:]), desc='build_dict')
+    }
+    with open(infersent_encoding_save_path+'.2', 'wb') as f:
         pickle.dump(infersent_encoded, f)
