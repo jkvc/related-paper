@@ -4,7 +4,6 @@ import sys
 import random
 from tqdm import tqdm
 
-random.seed(420)
 TRAINPROP, DEVPROP, TESTPROP = 0.9, 0.05, 0.05
 
 CITATION_GRAPH_PATH = '../data/s2_corpus_citation.pkl'
@@ -29,6 +28,7 @@ def get_negative_sample(all_ids, pos_ids):
 
 
 if __name__ == "__main__":
+    random.seed(420)
 
     with open(CITATION_GRAPH_PATH, 'rb') as f:
         citation_data = pickle.load(f)

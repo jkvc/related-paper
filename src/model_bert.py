@@ -3,26 +3,35 @@ import sys
 import transformers
 import pickle
 import train_utils
+import model_pooler_fixed
+import gen_pooler_input
 
 DEVICE = torch.device(
     'cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 
-class Bert_CLS_model(torch.nn.Module):
+class BertModelFinetune(torch.nn.Module):
     def __init__(
         self,
         bert_module,
     ):
-        super(Bert_CLS_model, self).__init__()
+        super(BertModelFinetune, self).__init__()
         self.bert_module = bert_module
+        self.pooler = model_pooler_fixed.PoolerFixed()
 
     def forward(self, x):
         hidden, = self.bert_module(x)  # (B,L,E)
-        cls_embedding = hidden[:, 0, :]
-        return cls_embedding
+        pooler_input = gen_pooler_input.stack_pooler_input(hidden)
+        encoding = self.pooler(pooler_input)
+        return encoding
 
 
 if __name__ == "__main__":
+
+    bert_module = transformers.DistilBertModel.from_pretrained(
+        'distilbert-base-uncased').to(DEVICE)
+    model = BertModelFinetune(bert_module)
+    train_utils.init_model_save(model, sys.argv[1])
 
     # with open('../data/metadata_bert_tokens.pkl', 'rb') as f:
     #     data = pickle.load(f)
@@ -50,15 +59,10 @@ if __name__ == "__main__":
     # print(bert_tokens)
     # bert_module = transformers.DistilBertModel.from_pretrained(
     #     'distilbert-base-uncased').to(DEVICE)
-    # model = Bert_CLS_model(bert_module)
+    # model = BertModelFinetune(bert_module)
     # print(model)
 
     # bert_hidden, = bert_module(bert_tokens)
     # print(bert_tokens.shape)
     # print(bert_hidden.shape)
     # print(bert_hidden)
-
-    bert_module = transformers.DistilBertModel.from_pretrained(
-        'distilbert-base-uncased').to(DEVICE)
-    model = Bert_CLS_model(bert_module)
-    train_utils.init_model_save(model, sys.argv[1])

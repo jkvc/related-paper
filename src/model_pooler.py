@@ -17,9 +17,10 @@ class Pooler(torch.nn.Module):
         layers = []
         feat_in = 768 * 3  # cls, max, avg
         self.fc = torch.nn.Linear(feat_in, out_dim)
+        self.tanh = torch.nn.Tanh()
 
     def forward(self, x):
-        return self.fc(x)
+        return self.tanh(self.fc(x))
 
 
 out_dim = {

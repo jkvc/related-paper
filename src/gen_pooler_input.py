@@ -6,13 +6,11 @@ import sys
 import train_utils
 import transformers
 from transformers import AdamW
-from triplet_loss import triplet_loss
 from model_bert import *
 from tqdm import tqdm, trange
 from model_pooler import *
 
-BERT_ENCODING_PATH = sys.argv[1]
-POOLER_INPUT_PATH = sys.argv[2]
+
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 SAVE_EVERY = 5000
 
@@ -33,6 +31,8 @@ def stack_pooler_input(hidden):
 
 
 if __name__ == "__main__":
+    BERT_ENCODING_PATH = sys.argv[1]
+    POOLER_INPUT_PATH = sys.argv[2]
 
     with open(BERT_ENCODING_PATH, 'rb') as f:
         bert_encoding_dict = pickle.load(f)

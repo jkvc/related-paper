@@ -12,9 +12,11 @@ from model_pooler import *
 from metrics import *
 
 BATCH_SIZE = 200
-NUM_EPOCH = 20
-
+NUM_EPOCH = 50
+SAMPLED_TRAIN_SET = False
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+POOLER_INPUT_PATH = '../data/s2_corpus_poolerinput_distilbert.pkl'
+# POOLER_INPUT_PATH = '../data/s2_corpus_poolerinput_bertbase.pkl'
 
 
 if __name__ == "__main__":
@@ -26,7 +28,7 @@ if __name__ == "__main__":
     optimizer = AdamW(model.parameters())
 
     train_loader, dev_loader, test_loader = dataloader.get_pooling_dataloaders(
-        BATCH_SIZE
+        BATCH_SIZE, POOLER_INPUT_PATH, sampled_train_set=SAMPLED_TRAIN_SET
     )
 
     def train_epoch_fn(e):

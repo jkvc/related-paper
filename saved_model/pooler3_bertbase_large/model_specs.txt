@@ -1,3 +1,0 @@
-Pooler(
-  (fc): Linear(in_features=2304, out_features=2304, bias=True)
-)
