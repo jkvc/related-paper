@@ -4,3 +4,4 @@ __pycache__
 *.jsonl
 .ipynb_checkpoints/
 raw_data/
+infersent_data/
