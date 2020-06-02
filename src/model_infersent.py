@@ -415,6 +415,8 @@ import time
 import torch
 import torch.nn as nn
 
+from tqdm import tqdm
+
 
 class InferSent(nn.Module):
 
@@ -493,8 +495,8 @@ class InferSent(nn.Module):
         # create vocab of words
         word_dict = {}
         sentences = [s.split() if not tokenize else self.tokenize(s)
-                     for s in sentences]
-        for sent in sentences:
+                     for s in tqdm(sentences, desc='infersent.get_word_dict.tokenize')]
+        for sent in tqdm(sentences, desc='infersent.get_word_dict'):
             for word in sent:
                 if word not in word_dict:
                     word_dict[word] = ''
@@ -507,7 +509,7 @@ class InferSent(nn.Module):
         # create word_vec with w2v vectors
         word_vec = {}
         with open(self.w2v_path, encoding='utf-8') as f:
-            for line in f:
+            for line in tqdm(f, desc='get_w2v.line'):
                 word, vec = line.split(' ', 1)
                 if word in word_dict:
                     word_vec[word] = np.fromstring(vec, sep=' ')
@@ -618,7 +620,7 @@ class InferSent(nn.Module):
             sentences, bsize, tokenize, verbose)
 
         embeddings = []
-        for stidx in range(0, len(sentences), bsize):
+        for stidx in tqdm(range(0, len(sentences), bsize), desc=f'encode.bsize={bsize}'):
             batch = self.get_batch(sentences[stidx:stidx + bsize])
             if self.is_cuda():
                 batch = batch.cuda()
@@ -669,4 +671,3 @@ class InferSent(nn.Module):
         plt.show()
 
         return output, idxs
-

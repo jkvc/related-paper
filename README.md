@@ -5,7 +5,7 @@ pip install transformers torchvision matplotlib jsonlines
 
 # init infersent data
 cd src
-mikdir infersent_data
+mkdir infersent_data
 cd infersent_data
 mkdir GloVe
 curl -Lo GloVe/glove.840B.300d.zip http://nlp.stanford.edu/data/glove.840B.300d.zip

@@ -9,10 +9,10 @@ bert_tokenizer = transformers.BertTokenizerFast.from_pretrained(
     'bert-base-uncased')
 
 if __name__ == "__main__":
-    srcpath = sys.argv[1]
-    dstpath = sys.argv[2]
+    corpus_path = sys.argv[1]
+    bert_token_save_path = sys.argv[2]
 
-    with open(srcpath, 'rb') as f:
+    with open(corpus_path, 'rb') as f:
         data = pickle.load(f)
 
     bert_data = {}
@@ -25,5 +25,5 @@ if __name__ == "__main__":
         encoded = encoded[:512]
         bert_data[id] = encoded
 
-    with open(dstpath, 'wb') as f:
+    with open(bert_token_save_path, 'wb') as f:
         pickle.dump(bert_data, f)
