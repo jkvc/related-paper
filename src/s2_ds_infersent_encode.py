@@ -45,18 +45,18 @@ if __name__ == "__main__":
 
     infersent.build_vocab(sentences, tokenize=True)
 
-    embeddings = infersent.encode(sentences, tokenize=True, bsize=64)
+    embeddings = infersent.encode(sentences, tokenize=True, bsize=16)
 
     split_len = len(ids) // 2
     infersent_encoded = {
         ids[idx]: embeddings[idx]
-        for idx in trange(len(ids[:split_len]), desc='build_dict')
+        for idx in trange(0, split_len, desc='build_dict')
     }
     with open(infersent_encoding_save_path+'.1', 'wb') as f:
         pickle.dump(infersent_encoded, f)
     infersent_encoded = {
         ids[idx]: embeddings[idx]
-        for idx in trange(len(ids[split_len:]), desc='build_dict')
+        for idx in trange(split_len, len(ids), desc='build_dict')
     }
     with open(infersent_encoding_save_path+'.2', 'wb') as f:
         pickle.dump(infersent_encoded, f)
